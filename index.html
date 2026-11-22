@@ -13,22 +13,10 @@
 </head>
 <body>
   <div class="shell">
-    <aside class="side">
-      <div class="brand">
-        <span class="mark" aria-hidden="true">SL</span>
-        <span><strong>Survey Lab</strong><small>Central</small></span>
-      </div>
-      <nav class="tabs" aria-label="Sections">
-        <button type="button" data-tab="overview">Overview</button>
-        <button type="button" data-tab="clients">Clients</button>
-        <button type="button" data-tab="licences">Licences</button>
-        <button type="button" data-tab="calculator">Calculator</button>
-        <button type="button" data-tab="prices">Prices</button>
-      </nav>
-      <p class="side-note" id="files"></p>
-    </aside>
-    <main id="main" tabindex="-1"><p class="muted">Loading…</p></main>
+    <aside class="side" id="side" aria-label="Survey Lab Central"></aside>
+    <main id="main" tabindex="-1"><p class="loading">Loading…</p></main>
   </div>
   <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="dlg" aria-labelledby="dlg-title"></dialog>
 </body>
 </html>

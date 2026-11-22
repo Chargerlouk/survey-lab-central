@@ -2,6 +2,33 @@
    light-weight headings and a cyan-to-mint gradient for the one thing to press.
    Light mode follows the same idea on a mint-grey ground. Every colour comes
    from the tokens below. */
+
+/* Inter (variable, 100–900), bundled with the site: fonts/Inter-LICENSE.txt (SIL OFL 1.1). */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(fonts/inter-latin-wght-normal.woff2) format("woff2-variations"), url(fonts/inter-latin-wght-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(fonts/inter-latin-ext-wght-normal.woff2) format("woff2-variations"), url(fonts/inter-latin-ext-wght-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(fonts/inter-greek-wght-normal.woff2) format("woff2-variations"), url(fonts/inter-greek-wght-normal.woff2) format("woff2");
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+
 :root {
   color-scheme: light;
   /* Ground and surfaces */
@@ -39,6 +66,15 @@
   --shadow-lift: 0 10px 30px rgba(15, 30, 25, .10);
   --radius: 10px;
   --radius-sm: 6px;
+  /* Charts: one data hue (mint) on its own track; status marks; neutral */
+  --data: #08977a;
+  --data-track: #d9efe7;
+  --chart-ok: #0f8a5f;
+  --chart-warn: #c98a00;
+  --chart-bad: #c4342b;
+  --chart-off: #c3ccc8;
+  --chart-grid: #e2e9e5;
+  --panel-solid: #ffffff;
   --font: "Inter", "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
   --font-display: "Inter Tight", "Inter", "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, sans-serif;
   --mono: "JetBrains Mono", "Cascadia Mono", "Consolas", ui-monospace, monospace;
@@ -69,6 +105,14 @@
     --bad-soft: rgba(255, 138, 125, .11);
     --off: #5f6d67;
     --side: rgba(10, 16, 13, .78);
+    --data: #13c79a;
+    --data-track: rgba(79, 240, 198, .10);
+    --chart-ok: #1fae78;
+    --chart-warn: #d39b25;
+    --chart-bad: #e0483f;
+    --chart-off: #3a4641;
+    --chart-grid: rgba(255, 255, 255, .07);
+    --panel-solid: #111a16;
     --shadow: none;
     --shadow-lift: 0 18px 50px rgba(0, 0, 0, .45);
   }
@@ -298,6 +342,71 @@ dialog::backdrop { background: rgba(3, 10, 7, .6); backdrop-filter: blur(3px); }
 
 #toast { position: fixed; bottom: 20px; right: 20px; background: var(--ink); color: var(--bg); padding: 11px 16px; border-radius: var(--radius-sm); opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .2s; pointer-events: none; max-width: 440px; z-index: 10; box-shadow: var(--shadow-lift); }
 #toast.show { opacity: 1; transform: none; }
+
+/* ---- Charts (vendor/charts.mjs) -------------------------------------- */
+svg .mark { fill: var(--data); }
+svg .track { fill: var(--data-track); }
+svg .ok { fill: var(--chart-ok); }
+svg .warn { fill: var(--chart-warn); }
+svg .bad { fill: var(--chart-bad); }
+svg .off { fill: var(--chart-off); }
+svg .gap, svg .ring { fill: var(--panel-solid, var(--bg)); }
+svg text { font-family: var(--font); font-size: 11.5px; }
+svg .on-ok, svg .on-bad { fill: #ffffff; font-weight: 600; }
+svg .on-warn { fill: #0b0b0b; font-weight: 600; }
+svg .on-off { fill: var(--ink); font-weight: 600; }
+svg .on-mark { fill: var(--accent-ink); font-weight: 600; }
+svg .grid, svg .lane { stroke: var(--chart-grid); stroke-width: 1; }
+svg .today { stroke: var(--accent); stroke-width: 2; }
+svg .tick { fill: var(--subtle); }
+svg .ev { cursor: default; }
+svg .ev:hover circle:not(.ring) { stroke: var(--ink); stroke-width: 1.5; }
+.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex: none; background: var(--chart-off); }
+.swatch.mark { background: var(--data); }
+.swatch.ok { background: var(--chart-ok); }
+.swatch.warn { background: var(--chart-warn); }
+.swatch.bad { background: var(--chart-bad); }
+.swatch.info { background: var(--accent); }
+svg .info { fill: var(--accent); }
+
+.barlist { display: grid; gap: 12px; }
+.barrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: baseline; padding: 2px 0; border-radius: 4px; }
+.barrow .bar { grid-column: 1 / -1; display: block; }
+.barrow .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.barrow .figure { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 13px; }
+.barrow.clickable { cursor: pointer; }
+.barrow.clickable:hover .name { color: var(--accent); }
+
+.segmented svg { display: block; }
+.segmented .legend { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 10px 0 0; padding: 0; font-size: 12.5px; color: var(--muted); }
+.segmented .legend li { display: inline-flex; align-items: center; gap: 7px; }
+.segmented .legend strong { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.meterlist { display: grid; gap: 12px; }
+.meterrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 5px 12px; align-items: baseline; }
+.meterrow .bar, .meterrow .nolimit { grid-column: 1 / -1; display: block; }
+.meterrow .name { color: var(--muted); font-size: 12.5px; }
+.meterrow .figure { font-variant-numeric: tabular-nums; font-weight: 600; font-size: 13px; }
+.meterrow .nolimit { font-size: 11.5px; color: var(--subtle); }
+
+.chart-gap { margin-top: 24px; }
+.glance .grid { margin-bottom: 0; }
+.glance h3 { margin-top: 0; }
+.timeline { display: grid; gap: 8px; }
+.timeline .lanes { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0; padding: 0; font-size: 12.5px; color: var(--muted); }
+.timeline .lanes li { display: inline-flex; align-items: center; gap: 7px; }
+.timeline svg { display: block; overflow: visible; }
+
+/* The stages, as slanted steps like the reference's diagram */
+.pipeline { list-style: none; margin: 0; padding: 0 6px; display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 8px; }
+.pipeline li { transform: skewX(-14deg); border: 1px solid var(--line-strong); background: var(--panel-2); border-radius: 4px; min-width: 0; }
+.pipeline li .inner { transform: skewX(14deg); display: grid; gap: 2px; padding: 12px 16px 12px 18px; }
+.pipeline .label { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--subtle); }
+.pipeline strong { font-family: var(--font-display); font-size: 26px; font-weight: 400; line-height: 1.15; letter-spacing: -.02em; }
+.pipeline small { color: var(--subtle); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pipeline li.on { border: 1px solid transparent; background: linear-gradient(var(--accent-soft), var(--accent-soft)) padding-box, linear-gradient(var(--panel-solid), var(--panel-solid)) padding-box, var(--gradient) border-box; box-shadow: 0 0 24px var(--accent-glow); }
+.pipeline li.on .label { color: var(--accent); }
+.pipeline li.none strong { color: var(--subtle); }
 
 /* ---- Invoices, checklist --------------------------------------------- */
 .invoice-form { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 14px; background: var(--panel-2); }
